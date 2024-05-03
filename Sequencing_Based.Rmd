@@ -1,0 +1,65 @@
+---
+title: "Sequencing_Based"
+author: "Mikias HW"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+# Prep Workspace
+## Load libraries
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)  # Data manipulation and visualization
+
+library(Seurat)  # Single-cell RNA sequencing
+
+library(SeuratData)
+
+library(patchwork)  # Combine plots
+
+library(conflicted)  # Resolve function name conflicts
+
+```
+
+## Conflicted functions
+```{r results='hide', message=FALSE, warning=FALSE}
+# Set function preferences
+conflicts_prefer(dplyr::select)
+
+conflicts_prefer(dplyr::filter)
+```
+
+## Define Directories
+```{r}
+# Project name
+projectName <- "sequencing"
+
+# Define and/or create data directory
+dataDir <- paste(getwd(), "data", projectName, sep = "/")
+dir.create(dataDir, recursive = TRUE)
+
+# Check for datafiles
+list.files(dataDir)
+
+# Define and/or create output directory
+outDir <- file.path(getwd(), "output", projectName, sep = "/")
+dir.create(outDir, recursive = TRUE)
+```
+
+# Load data
+```{r}
+# InstallData("stxBrain")
+
+brain <- LoadData("stxBrain", type = "anterior1")
+```
+
+# preprocessing
+```{r fig.width=16, fig.height=10}
+plot1 <- VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
+
+plot2 <- SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.position = "right")
+
+wrap_plots(plot1, plot2)
+```
+
