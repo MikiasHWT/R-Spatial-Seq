@@ -63,3 +63,44 @@ plot2 <- SpatialFeaturePlot(brain, features = "nCount_Spatial") + theme(legend.p
 wrap_plots(plot1, plot2)
 ```
 
+# Normalize
+sctransform normalizes data, detects high-variance features & stores results in SCT assay
+```{r}
+brain <- SCTransform(brain, assay = "Spatial", verbose = FALSE)
+```
+
+# Visualize 
+```{r fig.width=16, fig.height=10}
+SpatialFeaturePlot(brain, features = c("Hpca", "Ttr"))
+```
+
+# Dim Down & View
+```{r fig.width=16, fig.height=10}
+# Quick workflow
+brain <- brain |> 
+  RunPCA(assay = "SCT", verbose = FALSE) |> 
+  FindNeighbors(reduction = "pca", dims = 1:30) |> 
+  FindClusters(verbose = FALSE) |> 
+  RunUMAP(reduction = "pca", dims = 1:30)
+
+# Side by side UMAP & Spatial
+p1 <- DimPlot(brain, reduction = "umap", label = TRUE, label.size = 6)
+
+p2 <- SpatialDimPlot(brain, label = TRUE, label.size = 6)
+
+p1 + p2
+
+# View specific clusters
+SpatialDimPlot(brain, cells.highlight = CellsByIdentities(object = brain, idents = c(2, 1, 4, 3,
+    5, 8)), facet.highlight = TRUE, ncol = 3)
+```
+
+# Interactive view
+```{r eval=FALSE}
+SpatialDimPlot(brain, interactive = TRUE)
+
+LinkedDimPlot(brain)
+```
+
+
+
