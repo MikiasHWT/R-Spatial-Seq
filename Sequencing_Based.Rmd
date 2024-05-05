@@ -54,7 +54,7 @@ dir.create(outDir, recursive = TRUE)
 brain <- LoadData("stxBrain", type = "anterior1")
 ```
 
-# preprocessing
+# Preprocessing
 ```{r fig.width=16, fig.height=10}
 plot1 <- VlnPlot(brain, features = "nCount_Spatial", pt.size = 0.1) + NoLegend()
 
